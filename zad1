@@ -1,7 +1,17 @@
-import rysowanie.Transforms2D;
-import java.awt.*;
+package rysowanie;
+
+
+import javax.imageio.ImageIO;
 import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
+
+
 
 public class Main {
 
@@ -15,4 +25,140 @@ public class Main {
         window.setLocation( (screen.width - window.getWidth())/2, (screen.height - window.getHeight())/2 );
         window.setVisible(true);
     }
-}         
+}
+
+class Transforms2D extends JPanel {
+
+    private class Display extends JPanel {
+        protected void paintComponent(Graphics g) {
+            super.paintComponent(g);
+            Graphics2D g2 = (Graphics2D) g;
+            g2.translate(300, 300);  // Moves (0,0) to the center of the display.
+            int whichTransform = transformSelect.getSelectedIndex();
+            AffineTransform transform = new AffineTransform();
+
+
+            //TODO Apply transforms here, depending on the value of whichTransform!
+
+            int n = 8;  //liczba wierzchołków
+            double r = 30; //r-promień koła
+            double p = 0;   //p-przedział od 0-2pi;
+            double step = (Math.PI * 2) / n;    //step- odległość w jakiej powstanie pojedynczy wierzchołek
+            //tablice wartosci
+            int[] xValues1 = new int[n];
+            int[] yValues1 = new int[n];
+            //stworzenie tablicy wartości dla 8 kąta
+            for (int i = 0; i < n; i++) {
+                xValues1[i] = (int) (r * Math.sin(p));
+                yValues1[i] = (int) (r * Math.cos(p));
+                p += step;
+            }
+
+            //stworzenie 8-cio kąta
+
+            Polygon polygon = new Polygon(xValues1, yValues1, n);
+
+            // stworzenie case-ów transformacji 8-cio kąta
+
+            switch (whichTransform) {
+                case 0: {
+                    g2.drawPolygon(polygon);   //narysowanie wielokata
+                    g2.fill(polygon);          //wypelnienie wielokata kolorem
+                    break;
+                }
+                case 1: {
+                    g2.scale(0.3, 0.1);  //prozmiar wielokąta zmniejszony o połowę
+                    g2.drawPolygon(polygon);
+                    g2.fill(polygon);
+                    break;
+                }
+                case 2: {
+                    g2.scale(0.7, 0.5);
+                    g2.rotate(Math.toRadians(70));  //obrócenie wielokata o 70 stopni
+                    g2.drawPolygon(polygon);
+                    g2.fill(polygon);
+                    break;
+                }
+                case 3: {
+                    g2.scale(0.8, 1);
+                    g2.rotate(Math.toRadians(69));
+                    g2.drawPolygon(polygon);
+                    g2.fill(polygon);
+                    break;
+                }
+                case 4: {
+                    g2.shear(0.5,0);
+                    g2.draw(polygon);
+                    g2.fill(polygon);
+                    break;
+                }
+                case 5: {
+                    g2.translate(0, -200);
+                    g2.scale(1, 0.5);
+                    g2.draw(polygon);
+                    g2.fill(polygon);
+                    break;
+                }
+                case 6: {
+                    g2.rotate(Math.toRadians(250));
+                    g2.draw(polygon);
+                    g2.fill(polygon);
+                    break;
+                }
+                case 7: {
+                    g2.rotate(Math.toRadians(90));
+                    g2.drawPolygon(polygon);
+                    g2.fill(polygon);
+                    break;
+                }
+                case 8: {
+                    g2.translate(-100, 100);     //przesunieie wielokata o dane wartosci
+                    g2.rotate(Math.toRadians(-45));
+                    g2.draw(polygon);
+                    g2.fill(polygon);
+                    break;
+                }
+                case 9: {
+                    g2.translate(-43,30);
+                    g2.rotate(Math.toRadians(90));
+                    g2.draw(polygon);
+                    g2.fill(polygon);
+                    break;
+                }
+            }
+
+            //g2.drawImage(pic, -200, -150, null); // Draw image with center at (0,0).
+        }
+    }
+
+    private Display display;
+    private BufferedImage pic;
+    private JComboBox<String> transformSelect;
+
+    public Transforms2D() throws IOException {
+        // pic = ImageIO.read(getClass().getClassLoader().getResource("shuttle.jpg"));
+        display = new Display();
+        display.setBackground(Color.YELLOW);
+        display.setPreferredSize(new Dimension(600, 600));
+        transformSelect = new JComboBox<String>();
+        transformSelect.addItem("None");
+        for (int i = 1; i < 10; i++) {
+            transformSelect.addItem("No. " + i);
+        }
+        transformSelect.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                display.repaint();
+            }
+        });
+        setLayout(new BorderLayout(3, 3));
+        setBackground(Color.GRAY);
+        setBorder(BorderFactory.createLineBorder(Color.GRAY, 10));
+        JPanel top = new JPanel();
+        top.setLayout(new FlowLayout(FlowLayout.CENTER));
+        top.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
+        top.add(new JLabel("Transform: "));
+        top.add(transformSelect);
+        add(display, BorderLayout.CENTER);
+        add(top, BorderLayout.NORTH);
+    }
+}

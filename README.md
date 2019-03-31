@@ -1,0 +1,1 @@
+# GKLaboratorium1zad1

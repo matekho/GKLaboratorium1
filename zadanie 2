@@ -56,13 +56,13 @@ class zad2 extends JPanel {
 
         /* ----------------------------------------------------------------------- */
         g2.setColor(Color.RED); // ustaw kolor na czerwony
-        g2.translate(296,320); // ustaw środek na pkt x:300, y:300
+        g2.translate(296,320); // ustaw środek na pkt x:296, y:320
         g2.scale(3,3);  // powiększenie/skalowanie obiektu w osi x(3) i y(3)
         square(); // stworzenie
         resetTransform();   //  resetowanie watości
         g2.setColor(Color.RED);  //ustaw kolor na czerwony
-        g2.translate(105,200);  // ustaw środek na pkt x:300, y:300
-        g2.scale(4,3);  //powiększenie/skalowanie obiektu w osi x(1.5) i y (1.5)
+        g2.translate(105,200);  // ustaw środek na pkt x:105, y:200
+        g2.scale(4,3);  //powiększenie/skalowanie obiektu w osi x(4) i y (3)
         g2.rotate(40);
         square();
         resetTransform();
